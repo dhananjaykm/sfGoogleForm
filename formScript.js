@@ -4,6 +4,13 @@
     Open script editor form google form & make use of simple steps as below
     my excel sheet will like as:  
     timestamp(1) | first name(2) | last name(3) | email(4)
+    
+    **Create a connected oauth app in salesforce with callback url as: form url <form url>/exec   [replace viewForm with exec]
+    **POST STEPS: script editor
+    rename code.gs to forms.gs
+    add trigger & bind funtion: 'onFormSubmit' with form trigger events.
+    monitor the executions in Script > view > executions 
+        
 */
 
 //step 1. Authorize & get token
@@ -23,7 +30,7 @@ var tokenPropertyName = 'SALESFORCE_OAUTH_TOKEN';
 var baseURLPropertyName = 'SALESFORCE_INSTANCE_URL';
 
 
-function onFormSubmitUpdate(e) {
+function onFormSubmit(e) {
     Logger.log('calling uploadData ');
     var auth = salesforceAuth(TOKEN_URL, CLIENT_ID, CLIENT_SECRET, 'sf_userName', 'sf_password');
     var accessToken = auth.accessToken;
