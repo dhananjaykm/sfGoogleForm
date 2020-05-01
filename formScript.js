@@ -25,7 +25,7 @@ var baseURLPropertyName = 'SALESFORCE_INSTANCE_URL';
 
 function onFormSubmitUpdate(e) {
     Logger.log('calling uploadData ');
-    var auth = salesforceAuth(CLIENT_ID, CLIENT_SECRET, 'sf_userName', 'sf_password');
+    var auth = salesforceAuth(TOKEN_URL, CLIENT_ID, CLIENT_SECRET, 'sf_userName', 'sf_password');
     var accessToken = auth.accessToken;
     var instantUrl = auth.instanceURL;
 
@@ -61,3 +61,29 @@ function onFormSubmitUpdate(e) {
     }
 
 }
+
+function salesforceAuth(authURL, consumerKey, consumerSecret, SalesforceUsername, salesforcePassword) {
+
+        Logger.log("authURL = " + authURL);
+        Logger.log("consumerKey = " + consumerKey);
+
+        var payload = {
+            'grant_type': 'password',
+            'client_id': consumerKey,               // Salesforce Consumer Key
+            'client_secret': consumerSecret,
+            'username': SalesforceUsername,
+            'password': salesforcePassword         // Combination of Password and Security token
+        };
+
+        var options = {
+            'method': 'post',
+            'payload': payload
+        };
+
+        var results = UrlFetchApp.fetch(authURL, options);
+        var json = results.getContentText();
+        var data = JSON.parse(json);
+
+        return { accessToken: data.access_token, instanceURL: data.instance_url }
+
+    }
